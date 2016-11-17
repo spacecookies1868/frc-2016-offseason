@@ -1,7 +1,7 @@
 Space Cookies Programming 2017 Guidelines
 =======
 
-This document contains framework, style, and check-in guidelines.
+This document contains [framework](#framework), [style](#style), and [check-in](#check-in) guidelines.
 
 ------------------------------------------------------------
 Framework <a name="framework"></a>
@@ -53,8 +53,8 @@ src/Controllers
 ####SuperstructureController
 - Code for moving the superstructure
 
-####Style of controllers:
-- Constructor takes in `RobotModel* myRobot, RemoteControl* myHumanControl` (except for `AutonomousController`)
+####Style of (most) controllers:
+- Constructor takes in `RobotModel* myRobot, RemoteControl* myHumanControl`
 - Have the following methods: `Init()`, `Reset()`, `Update(double currTimeSec, double deltaTimeSec)`, `RefreshIni()`
 
 ------------------------------------------------------------
@@ -95,8 +95,8 @@ Checklist:
 - Has a leader and/or mentor checked your code?
 - Have you written a descriptive commit message with the following details?:
 	- The changes you made
-	- Whether you tested the code. If so, please describe how the code ran.
-	- What needs to be done on the code
+	- Whether you tested the code and how it ran on the robot
+	- Next steps / what needs to be done on the code
 	- Sign your name, the names of people working with you, and the person/people who checked your code.
 
 ------------------------------------------------------------

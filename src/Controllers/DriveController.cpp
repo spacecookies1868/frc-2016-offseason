@@ -1,10 +1,3 @@
-/*
- * DriveController.cpp
- *
- *  Created on: Nov 16, 2016
- *      Author: maggiewang
- */
-
 #include <Controllers/DriveController.h>
 
 DriveController::DriveController() {

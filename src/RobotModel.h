@@ -1,10 +1,3 @@
-/*
- * RobotModel.h
- *
- *  Created on: Nov 16, 2016
- *      Author: maggiewang
- */
-
 #ifndef SRC_ROBOTMODEL_H_
 #define SRC_ROBOTMODEL_H_
 

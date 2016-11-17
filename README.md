@@ -9,7 +9,7 @@ Framework <a name="framework"></a>
 src
 --------
 ####MainProgram
-- Drives the program. Uses the IterativeRobot base class from the WPI Library.
+- Drives the program. Inherits from the IterativeRobot base class from the WPI Library.
 
 ####RobotModel
 - Creates objects of everything on the robot (actuators, sensors, etc.)
@@ -34,28 +34,31 @@ src/Logger
 
 src/Autonomous
 --------
-####Commands
-- WaitCommand, DriveStraightCommand, etc.
-	
-####Modes
+####/Commands
+- Contains command classes (`WaitCommand`, `DriveStraightCommand`, etc.)
+
+####AutonomousCommand
+- Abstract class, contains the `Init()`, `Update()`, `IsDone()` virtual methods
+
+####/Modes
 - Contains our various autonomous modes by putting the commands into a queue
+
+####BlankMode
+- The robot just sits
 
 src/Vision
 --------
-####CameraController
-- 
 
 src/Controllers
 --------
+####Controller
+- Abstract class, contains the `Init()`, `Reset()`, `Update(double currTimeSec, double deltaTimeSec)`, `RefreshIni()` virtual methods
+
 ####DriveController
 - Code for driving the robot
 
 ####SuperstructureController
 - Code for moving the superstructure
-
-####Style of (most) controllers:
-- Constructor takes in `RobotModel* myRobot, RemoteControl* myHumanControl`
-- Have the following methods: `Init()`, `Reset()`, `Update(double currTimeSec, double deltaTimeSec)`, `RefreshIni()`
 
 ------------------------------------------------------------
 Style Guidelines <a name="style"></a>

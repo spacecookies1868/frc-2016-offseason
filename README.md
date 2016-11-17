@@ -37,13 +37,13 @@ src/Autonomous
 ####/Commands
 - Contains command classes (`WaitCommand`, `DriveStraightCommand`, etc.)
 
-####AutonomousCommand
+#####AutonomousCommand
 - Abstract class, contains the `Init()`, `Update()`, `IsDone()` virtual methods
 
 ####/Modes
 - Contains our various autonomous modes by putting the commands into a queue
 
-####BlankMode
+#####BlankMode
 - The robot just sits
 
 src/Vision

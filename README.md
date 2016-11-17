@@ -78,11 +78,12 @@ All header files should have `#define` guards
 
 Naming Conventions
 --------
-Private instance variables: `camelCaseFirstLetterLowercase`
-Macros, consts (like ports): `CAPITAL_LETTERS`
-Methods and classes: `CamelCaseFirstLetterUppercase`
--- Class names should be nouns. 
--- Accessor methods typically start with `Get`, mutator methods typically start with `Set`.
+- Private instance variables: `camelCaseFirstLetterLowercase`
+- Macros, consts (like ports): `CAPITAL_LETTERS`
+- Methods and classes: `CamelCaseFirstLetterUppercase`
+
+- Class names should be nouns. 
+- Accessor methods typically start with `Get`, mutator methods typically start with `Set`.
 
 ------------------------------------------------------------
 Check-in Guidelines <a name="check-in"></a>
@@ -90,10 +91,10 @@ Check-in Guidelines <a name="check-in"></a>
 Follow these guidelines for clarity and quality control.
 
 Checklist:
-- Are you only checking in the files you changed? Make sure to check the diffs between your code and the code in the repo.
-- Have you added comments to your code?
-- Has a leader and/or mentor checked your code?
-- Have you written a descriptive commit message with the following details?:
+- [ ] Are you only checking in the files you changed? Make sure to check the diffs between your code and the code in the repo.
+- [ ] Have you added comments to your code?
+- [ ] Has a leader and/or mentor checked your code?
+- [ ] Have you written a descriptive commit message with the following details?:
 	- The changes you made
 	- Whether you tested the code and how it ran on the robot
 	- Next steps / what needs to be done on the code

@@ -1,48 +1,55 @@
 #include "WPILib.h"
+#include "Autonomous/AutonomousController.h"
+#include "Controllers/DriveController.h"
+#include "Controllers/SuperstructureController.h"
+#include "Logger/Debugging.h"
+#include "Logger/Ini.h"
 #include "Logger/Logger.h"
+#include "Vision/CameraController.h"
+#include "ControlBoard.h"
+#include "RobotModel.h"
 
 class MainProgram : public IterativeRobot {
-private:
-	LiveWindow *lw = LiveWindow::GetInstance();
-	SendableChooser *chooser;
-	const std::string autoNameDefault = "Default";
-	const std::string autoNameCustom = "My Auto";
-	std::string autoSelected;
+	// Declares variables
+	RobotModel *robot;
+	ControlBoard *controlBoard;
+	DriveController *driveController;
+	SuperstructureController *superstructureController;
+	AutonomousController *autonomousController;
+	CameraController *cameraController;
+	LiveWindow *liveWindow;
 
-	void RobotInit() {
-		chooser = new SendableChooser();
-		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
-		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
-		SmartDashboard::PutData("Auto Modes", chooser);
+	// Timer variables
+	double currTimeSec;
+	double lastTimeSec;
+	double deltaTimeSec;
+
+public:
+	MainProgram() {
+		robot = new RobotModel();
+		controlBoard = new ControlBoard();		// to put inputs soon
+		driveController = new DriveController();
+		superstructureController = new SuperstructureController();
+		autonomousController = new AutonomousController();
+		cameraController = new CameraController();
+		liveWindow = LiveWindow::GetInstance();
+
+		currTimeSec = 0.0;
+		lastTimeSec = 0.0;
+		deltaTimeSec = 0.0;
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
-	 * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
-	 * Dashboard, remove all of the chooser code and uncomment the GetString line to get the auto name from the text box
-	 * below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional comparisons to the if-else structure below with additional strings.
-	 * If using the SendableChooser make sure to add them to the chooser code above as well.
-	 */
-	void AutonomousInit() {
-		autoSelected = *((std::string*)chooser->GetSelected());
-		//std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
-		std::cout << "Auto selected: " << autoSelected << std::endl;
+private:
+	void RobotInit() {
 
-		if(autoSelected == autoNameCustom) {
-			//Custom Auto goes here
-		} else {
-			//Default Auto goes here
-		}
+	}
+
+	void AutonomousInit() {
+
 	}
 
 	void AutonomousPeriodic() {
-		if(autoSelected == autoNameCustom) {
-			//Custom Auto goes here
-		} else {
-			//Default Auto goes here
-		}
+
 	}
 
 	void TeleopInit() {
@@ -54,7 +61,7 @@ private:
 	}
 
 	void TestPeriodic() {
-		lw->Run();
+
 	}
 };
 

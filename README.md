@@ -12,7 +12,7 @@ src
 - Drives the program. Inherits from the IterativeRobot base class from the WPI Library.
 
 ####RobotModel
-- Creates objects of everything on the robot (actuators, sensors, etc.)
+- Instantiates everything on the robot (actuators, sensors, etc.)
 
 ####ControlBoard
 - Reads driver station button and joystick values
@@ -71,22 +71,38 @@ Initialize all private instance variables in constructors.
 
 Header Files
 --------
-All header files should have `#define` guards
+- All header files should have `#define` guards
 ````
 	#ifndef FILE_NAME_H
 	#define FILE_NAME_H
 	...
 	#endif		// SRC_FOLDER_FILE_NAME_H
 ````
+- `#include` the header files in this order (if applicable): `WPILib.h`, external libraries specific to robotics (like `navx/AHRS.h`), other header files in the order they appear in your source tree, and libraries specific to C++ (like `<iostream>`)
+- Only `#include` the header files you need
+
+Pointers
+--------
+- Declare pointers like `type *ptrName;`. If you're declaring more than one pointer, do `type *ptrName1, *ptrName2;`.
+
+Formatting
+--------
+- Put the starting curly brace on the same line (like `Method() {`)
+- Try to group similar methods and variables together. Separate the groups with empty lines.
+- In header files, generally methods go before variables
 
 Naming Conventions
 --------
-- Private instance variables: `camelCaseFirstLetterLowercase`
+- Private instance variables: `lowerCamelCase`
 - Macros, consts (like ports): `CAPITAL_LETTERS`
-- Methods and classes: `CamelCaseFirstLetterUppercase`
+- Methods and classes: `UpperCamelCase`
 
 - Class names should be nouns. 
 - Accessor methods typically start with `Get`, mutator methods typically start with `Set`.
+
+Other
+--------
+- Use `double` (not `float`) for decimal values
 
 ------------------------------------------------------------
 Check-in Guidelines <a name="check-in"></a>

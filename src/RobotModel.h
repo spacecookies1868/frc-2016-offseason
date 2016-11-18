@@ -3,24 +3,26 @@
 
 #include "WPILib.h"
 #include "../ext/navx/AHRS.h"
-#include "Logger/Ini.h"
-#include "Logger/Logger.h"
+#include "../ext/ini/ini.h"
+#include "Logger.h"
 #include "Ports.h"
+#include <math.h>
 
 class RobotModel {
 public:
 	RobotModel();
-	~RobotModel();
+	~RobotModel() {}
 
-	/* -----Drive-related methods----- */
-	enum Wheels {kLeftWheels, kRightWheels, kAllWheels};
 	void Reset();
-	void SetWheelSpeed(Wheels w, double speed);
+
+	/* ----- Drive-related methods ----- */
+	enum Wheels {kLeftWheels, kRightWheels, kAllWheels};
 	double GetWheelSpeed(Wheels w);
+	void SetWheelSpeed(Wheels w, double speed);
 
 	bool IsLowGear();
-	bool ShiftToLowGear();
-	bool ShiftToHighGear();
+	void ShiftToLowGear();
+	void ShiftToHighGear();
 
 	double GetDriveLeftEncoderValue();
 	double GetDriveRightEncodeValue();
@@ -32,12 +34,12 @@ public:
 	void ZeroNavXYaw();
 	/* ------------------------------- */
 
-	/* -----Super-structure related methods----- */
+	/* ----- Super-structure related methods ----- */
 	// to do
 	/* ----------------------------------------- */
 
 	double GetPressureSensorValue();
-	void ResetIni();
+	void RefreshIni();
 
 	double GetTime();
 	void ResetTimer();
@@ -50,14 +52,6 @@ private:
 	// Drive variables
 	bool isLowGear;
 
-	/*
-	// Superstructure
-	Victor *intakeMotor, *outtakeMotorA, *outtakeMotorB; // to do superstructure
-	Solenoid *intakeArmSolenoidA, *intakeArmSolenoidB;
-	Solenoid *defenseManipSolenoidA, *defenseManipSolenoidB;
-	Solenoid *brakeSolenoidA, *brakeSolenoidB;
-	*/
-
 	// Other
 	Compressor *compressor;
 	PowerDistributionPanel *pdp;
@@ -66,9 +60,7 @@ private:
 
 	// Sensors
 	Encoder *leftEncoder, *rightEncoder;
-	//Encoder *outtakeEncoder1, *outtakeEncoder2;
 	AnalogInput *pressureSensor;
-	DigitalInput *intakeSwitch;
 };
 
 #endif /* SRC_ROBOTMODEL_H_ */

@@ -1,11 +1,7 @@
 #include <Controllers/DriveController.h>
 
-DriveController::DriveController() {
+DriveController::DriveController(RobotModel* myRobot, ControlBoard* myHumanControl) {
 	// TODO Auto-generated constructor stub
 
-}
-
-DriveController::~DriveController() {
-	// TODO Auto-generated destructor stub
 }
 

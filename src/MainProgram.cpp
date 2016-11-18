@@ -1,10 +1,9 @@
 #include "WPILib.h"
+#include "../ext/ini/ini.h"
 #include "Autonomous/AutonomousController.h"
 #include "Controllers/DriveController.h"
 #include "Controllers/SuperstructureController.h"
-#include "Logger/Debugging.h"
-#include "Logger/Ini.h"
-#include "Logger/Logger.h"
+#include "Logger.h"
 #include "Vision/CameraController.h"
 #include "ControlBoard.h"
 #include "RobotModel.h"
@@ -28,7 +27,7 @@ public:
 	MainProgram() {
 		robot = new RobotModel();
 		controlBoard = new ControlBoard();		// to put inputs soon
-		driveController = new DriveController();
+		driveController = new DriveController(robot, controlBoard);
 		superstructureController = new SuperstructureController();
 		autonomousController = new AutonomousController();
 		cameraController = new CameraController();
@@ -41,7 +40,7 @@ public:
 
 private:
 	void RobotInit() {
-
+		robot->Reset();
 	}
 
 	void AutonomousInit() {

@@ -63,7 +63,7 @@ double PIDControlLoop::Update(double currentValue) {
 	double output = pTerm + iTerm + dTerm;
 	output = Saturate(output, maxAbsOutput);
 
-	if (abs(output) < minAbsError) {
+	if (fabs(output) < minAbsError) {
 		output = 0.0;
 	}
 
@@ -95,11 +95,15 @@ double PIDControlLoop::GetDFac() {
 	return dFac;
 }
 
-void PIDControlLoop::PrintPIDValues(std::string pidName) {
-	SmartDashboard::PutNumber(pidName + " error", error);
-	SmartDashboard::PutNumber(pidName + " diffError", diffError);
-	SmartDashboard::PutNumber(pidName + " sumError", sumError);
-	SmartDashboard::PutNumber(pidName + " pFac", pFac);
-	SmartDashboard::PutNumber(pidName + " iFac", iFac);
-	SmartDashboard::PutNumber(pidName + " dFac", dFac);
+double PIDControlLoop::Saturate(double value, double maxAbsValue) {
+	//limits the value to maxAbsValue
+	if (maxAbsValue > 0.0) {
+		if (value > 0.0) {
+			return fmin(value, maxAbsValue);
+		} else {
+			return fmax(value, -maxAbsValue);
+		}
+	} else {
+		return value;
+	}
 }

@@ -1,10 +1,3 @@
-/*
- * PIDControlLoop.cpp
- *
- *  Created on: Nov 16, 2016
- *      Author: maggiewang
- */
-
 #include <PIDControlLoop.h>
 
 PIDControlLoop::PIDControlLoop() {
@@ -15,7 +8,21 @@ PIDControlLoop::PIDControlLoop() {
 	maxAbsError = 0.0;
 	maxAbsDiffError = 0.0;
 	desiredAccuracy = 0.0;
-	maxAbsIFac = 0.1;
+	maxAbsITerm = 0.1;
+	minAbsError = 0.0;
+	timeLimit = 1.5;
+	Init(0.0, 0.0);
+}
+
+PIDControlLoop::PIDControlLoop(double p, double i, double d) {
+	pFac = p;
+	iFac = i;
+	dFac = d;
+	maxAbsOutput = 0.0;
+	maxAbsError = 0.0;
+	maxAbsDiffError = 0.0;
+	desiredAccuracy = 0.0;
+	maxAbsITerm = 0.1;
 	minAbsError = 0.0;
 	timeLimit = 1.5;
 	Init(0.0, 0.0);
@@ -26,8 +33,7 @@ void PIDControlLoop::Init(double myInitialValue, double myDesiredValue) {
 	desiredValue = myDesiredValue;
 }
 
-void PIDControlLoop::Init(double p, double i, double d,
-						  double myInitialValue, double myDesiredValue) {
+void PIDControlLoop::Init(double p, double i, double d, double myInitialValue, double myDesiredValue) {
 	pFac = p;
 	iFac = i;
 	dFac = d;
@@ -54,7 +60,7 @@ double PIDControlLoop::Update(double currentValue) {
 	sumError += error;
 
 	if (iFac > 0.0) {
-		sumError = Saturate(sumError, (maxAbsIFac / iFac));
+		sumError = Saturate(sumError, (maxAbsITerm / iFac));
 	}
 
 	double pTerm = pFac * error;
@@ -69,6 +75,51 @@ double PIDControlLoop::Update(double currentValue) {
 
 	oldError = error;
 	return output;
+}
+
+double PIDControlLoop::Update(double currentSensorValue, double desiredSensorValue) {
+	double error = desiredSensorValue - currentSensorValue;
+	desiredValue = desiredSensorValue;
+	error = Saturate(error, maxAbsError);
+	double diffError = 0.0;
+
+	if (oldError != 0.0) {
+		diffError = error - oldError;
+		diffError = Saturate(diffError, maxAbsDiffError);
+	}
+
+	sumError += error;
+	if (iFac > 0.0) {
+		sumError = Saturate(sumError, (maxAbsITerm / iFac));
+	}
+
+	double pTerm = pFac * error;
+	double iTerm = iFac * sumError;
+	double dTerm = dFac * diffError;
+	double output = pTerm + iTerm + dTerm;
+	output = Saturate(output, maxAbsOutput);
+
+	if (fabs(output) < minAbsError) {
+		output = 0.0;
+	}
+
+	oldError = error;
+	return output;
+}
+
+/*	When the value returned is close enough to what we want for a certain length of time.
+	@param currentSensorValue the current value of the sensor
+	@param deltaTime the increment of time between each loop of the code
+*/
+
+bool PIDControlLoop::ControlLoopDone(double currentSensorValue, double deltaTime) {
+	if (fabs(desiredValue - currentSensorValue) <= desiredAccuracy) {
+		timeCount += deltaTime;
+		return (timeCount >= timeLimit);
+	} else {
+		timeCount = 0;
+		return false;
+	}
 }
 
 double PIDControlLoop::GetError() {
@@ -96,7 +147,7 @@ double PIDControlLoop::GetDFac() {
 }
 
 double PIDControlLoop::Saturate(double value, double maxAbsValue) {
-	//limits the value to maxAbsValue
+	// Limits the value to maxAbsValue
 	if (maxAbsValue > 0.0) {
 		if (value > 0.0) {
 			return fmin(value, maxAbsValue);

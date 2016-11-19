@@ -4,7 +4,6 @@
 #include "WPILib.h"
 #include "../ext/navx/AHRS.h"
 #include "../ext/ini/ini.h"
-#include "Logger.h"
 #include "Ports.h"
 #include <math.h>
 
@@ -24,8 +23,12 @@ public:
 	void ShiftToLowGear();
 	void ShiftToHighGear();
 
-	double GetDriveLeftEncoderValue();
-	double GetDriveRightEncodeValue();
+	bool GetBrake();
+	void SetBrakeOn();
+	void SetBrakeOff();
+
+	double GetLeftDriveEncoderValue();
+	double GetRightDriveEncoderValue();
 	void ResetDriveEncoders();
 
 	double GetNavXYaw();
@@ -44,10 +47,11 @@ public:
 	double GetTime();
 	void ResetTimer();
 
+	Ini *pini;		// TODO: clean this
 private:
 	// Drive actuators
 	Victor *leftDriveMotorA, *leftDriveMotorB, *rightDriveMotorA, *rightDriveMotorB;
-	Solenoid *gearShiftSolenoid;
+	Solenoid *gearShiftSolenoid, *brakeSolenoidA, *brakeSolenoidB;
 
 	// Drive variables
 	bool isLowGear;
@@ -55,7 +59,6 @@ private:
 	// Other
 	Compressor *compressor;
 	PowerDistributionPanel *pdp;
-	Ini *pini;
 	Timer *timer;
 
 	// Sensors

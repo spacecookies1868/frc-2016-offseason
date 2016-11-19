@@ -10,7 +10,10 @@ RobotModel::RobotModel() {
 	leftDriveMotorB->SetSafetyEnabled(false);
 	rightDriveMotorA->SetSafetyEnabled(false);
 	rightDriveMotorB->SetSafetyEnabled(false);
+
 	gearShiftSolenoid = new Solenoid(PNEUMATICS_CONTROL_MODULE_ID, GEAR_SHIFT_SOLENOID_PORT);
+	brakeSolenoidA = new Solenoid(PNEUMATICS_CONTROL_MODULE_ID, BRAKE_SOLENOID_A_PORT);
+	brakeSolenoidB = new Solenoid(PNEUMATICS_CONTROL_MODULE_ID, BRAKE_SOLENOID_B_PORT);
 
 	// Drive sensors
 	leftEncoder = new Encoder(LEFT_ENCODER_A_PWM_PORT, LEFT_ENCODER_B_PWM_PORT, true);
@@ -39,7 +42,7 @@ void RobotModel::Reset() {
 }
 
 double RobotModel::GetWheelSpeed(Wheels w) {
-	switch(w) {
+	switch (w) {
 	case (kLeftWheels):
 		return leftDriveMotorA->Get();
 		break;
@@ -85,11 +88,25 @@ void RobotModel::ShiftToHighGear() {
 	isLowGear = false;
 }
 
-double RobotModel::GetDriveLeftEncoderValue() {
+bool RobotModel::GetBrake() {
+	return brakeSolenoidA->Get();
+}
+
+void RobotModel::SetBrakeOn() {
+	brakeSolenoidA->Set(true);
+	brakeSolenoidB->Set(false);
+}
+
+void RobotModel::SetBrakeOff() {
+	brakeSolenoidA->Set(false);
+	brakeSolenoidB->Set(true);
+}
+
+double RobotModel::GetLeftDriveEncoderValue() {
 	return leftEncoder->GetDistance();
 }
 
-double RobotModel::GetDriveRightEncodeValue() {
+double RobotModel::GetRightDriveEncoderValue() {
 	return rightEncoder->GetDistance();
 }
 

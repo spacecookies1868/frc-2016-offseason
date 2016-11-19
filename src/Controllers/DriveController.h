@@ -13,13 +13,10 @@ public:
 	~DriveController() {}
 	void Update(double currTimeSec, double deltaTimeSec);
 	void RefreshIni();
-	void Reset();
 	void QuickTurn(double myRight);
 	void ArcadeDrive(double myX, double myY);
 	void TankDrive(double myLeft, double myRight);
 	int DriveDirection();
-
-	enum DriveState {kInitialize, kTeleopDrive};
 
 private:
 	RobotModel *robot;

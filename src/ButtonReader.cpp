@@ -1,10 +1,3 @@
-/*
- * ButtonReader.cpp
- *
- *  Created on: Nov 18, 2016
- *      Author: maggiewang
- */
-
 #include <ButtonReader.h>
 
 ButtonReader::ButtonReader(Joystick *myJoystick, int myButtonNum) {

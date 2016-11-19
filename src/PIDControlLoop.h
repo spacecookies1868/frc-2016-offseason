@@ -1,10 +1,3 @@
-/*
- * PIDControlLoop.h
- *
- *  Created on: Nov 16, 2016
- *      Author: maggiewang
- */
-
 #ifndef SRC_PIDCONTROLLOOP_H_
 #define SRC_PIDCONTROLLOOP_H_
 
@@ -13,16 +6,17 @@
 class PIDControlLoop {
 public:
 	PIDControlLoop();
+	PIDControlLoop(double pFac, double iFac, double dFac);
 	~PIDControlLoop() {}
 
+	void Set(double pFac, double iFac, double dFac,
+			double maxAbsOutput, double maxAbsError, double maxAbsDiffError,
+			double desiredAccuracy, double maxAbsIFac, double minAbsError,
+			double timeLimit);
+	void Set(double pFac, double iFac, double dFac);
 	void Init(double initialValue, double desiredValue);
 	void Init(double pFac, double iFac, double dFac,
-			  double initialValue, double desiredValue);
-//	void Set(double pFac, double iFac, double dFac,
-//			 double maxAbsOutput, double maxAbsError, double maxAbsDiffError,
-//			 double desiredAccuracy, double maxAbsIFac, double minAbsError,
-//			 double timeLimit);
-	void Set(double pFac, double iFac, double dFac);
+			double initialValue, double desiredValue);
 	double Update(double currentValue);
 	double Update(double currentValue, double desiredValue);
 	bool ControlLoopDone(double currentValue);
@@ -42,7 +36,7 @@ private:
 	// PID variables
 	double pFac, iFac, dFac;
 	double maxAbsOutput, maxAbsError, maxAbsDiffError;
-	double desiredAccuracy, maxAbsIFac, minAbsError;
+	double desiredAccuracy, maxAbsITerm, minAbsError;
 	double timeLimit;
 
 	//

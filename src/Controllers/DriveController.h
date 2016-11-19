@@ -17,7 +17,7 @@ public:
 	void ArcadeDrive(double myX, double myY);
 	void TankDrive(double myLeft, double myRight);
 	int DriveDirection();
-
+	void Reset();
 private:
 	RobotModel *robot;
 	ControlBoard *controlBoard;

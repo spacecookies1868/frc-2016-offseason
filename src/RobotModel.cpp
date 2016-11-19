@@ -39,6 +39,7 @@ void RobotModel::Reset() {
 	ResetDriveEncoders();
 	RefreshIni();
 	ResetTimer();
+	ZeroNavXYaw();
 }
 
 double RobotModel::GetWheelSpeed(Wheels w) {

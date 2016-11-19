@@ -1,18 +1,25 @@
-/*
- * AutonomousController.cpp
- *
- *  Created on: Nov 17, 2016
- *      Author: maggiewang
- */
-
 #include <Autonomous/AutonomousController.h>
 
-AutonomousController::AutonomousController() {
-	// TODO Auto-generated constructor stub
+AutonomousController::AutonomousController(){
 
 }
 
-AutonomousController::~AutonomousController() {
-	// TODO Auto-generated destructor stub
+AutonomousController::AutonomousController(AutonomousMode *autoMode){
+	autonomousMode = autoMode;
 }
 
+void AutonomousController::SetAutonomousMode(AutonomousMode *autoMode) {
+	autonomousMode = autoMode;
+}
+
+void AutonomousController::Update(double currTimeSec, double deltaTimeSec) {
+	autonomousMode->Update(currTimeSec, deltaTimeSec);
+}
+
+void AutonomousController::Reset() {
+
+}
+
+bool AutonomousController::IsDone() {
+	return autonomousMode->IsDone();
+}

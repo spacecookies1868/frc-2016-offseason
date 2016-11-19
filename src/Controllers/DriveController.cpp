@@ -98,3 +98,7 @@ void DriveController::TankDrive(double myLeft, double myRight) {
 int DriveController::DriveDirection() {
 	return (controlBoard->GetReverseDriveDesired()) ? -1 : 1;
 }
+
+void DriveController::Reset() {
+	// TODO
+}

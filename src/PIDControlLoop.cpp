@@ -41,12 +41,6 @@ void PIDControlLoop::Init(double p, double i, double d, double myInitialValue, d
 	desiredValue = myDesiredValue;
 }
 
-void PIDControlLoop::Set(double p, double i, double d) {
-	pFac = p;
-	iFac = i;
-	dFac = d;
-}
-
 double PIDControlLoop::Update(double currentValue) {
 	double error = desiredValue - currentValue;
 	error = Saturate(error, maxAbsError);

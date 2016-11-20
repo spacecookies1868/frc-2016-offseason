@@ -5,49 +5,56 @@
 #include <math.h>
 #include <string.h>
 
+struct PIDConfig {
+ public:
+	PIDConfig();
+	double pFac;
+	double iFac;
+	double dFac;
+	double maxAbsOutput;
+	double maxAbsError;
+	double maxAbsDiffError;
+	double desiredAccuracy;
+	double maxAbsITerm;
+	double minAbsError;
+	double timeLimit;
+};
+
 class PIDControlLoop {
-public:
-	PIDControlLoop();
-	PIDControlLoop(double pFac, double iFac, double dFac);
+ public:
+	PIDControlLoop(PIDConfig *pidConfig);
 	~PIDControlLoop() {}
 
-	void Set(double pFac, double iFac, double dFac,
-			double maxAbsOutput, double maxAbsError, double maxAbsDiffError,
-			double desiredAccuracy, double maxAbsIFac, double minAbsError,
-			double timeLimit);
-	void Set(double pFac, double iFac, double dFac);
-	void Init(double initialValue, double desiredValue);
-	void Init(double pFac, double iFac, double dFac,
-			double initialValue, double desiredValue);
-	double Update(double currentValue);
-	double Update(double currentValue, double desiredValue);
-	bool ControlLoopDone(double currentValue);
-	bool ControlLoopDone(double currentValue, double deltaTime);
+	void Init(double initValue, double desiredValue);
+	void Init(PIDConfig *pidConfig, double initValue, double desiredValue);
 
-	double Saturate(double value, double maxAbsValue);
+	double Update(double currValue); // Returns the actuator value (motor speed, etc.)
+	double Update(double currValue, double desiredValue);
+	double Update(PIDConfig *pidConfig, double currValue, double desiredValue);
 
-	// Accessors
+	bool ControlLoopDone(double currValue);
+
+	static double Saturate(double value, double maxAbsValue);
+
+	PIDConfig *GetPIDConfig();
 	double GetError();
 	double GetDiffError();
 	double GetSumError();
-	double GetPFac();
-	double GetIFac();
-	double GetDFac();
+	double GetPTerm();
+	double GetITerm();
+	double GetDTerm();
 
-	void PrintPID(const std::string& pidName);
+	void PrintPIDValues(const std::string& pidName);
+	void PrintPIDToConsole(const std::string& pidName);
+	void PrintPIDToSmartDashboard(const std::string& pidName);
 
 private:
-	// PID variables
-	double pFac, iFac, dFac;
-	double maxAbsOutput, maxAbsError, maxAbsDiffError;
-	double desiredAccuracy, maxAbsITerm, minAbsError;
-	double timeLimit;
-
-	//
-	double pTerm, iTerm, dTerm;
-	double initialValue, desiredValue;
+	PIDConfig *pidConfig;
+	double initialSensorValue, currentSensorValue, desiredSensorValue;
 	double oldError, error, sumError, diffError;
-	double timeCount;
+	double pTerm, iTerm, dTerm;
+	double output;
+	double timeWithinSetpointThreshold;
 };
 
 #endif /* SRC_PIDCONTROLLOOP_H_ */

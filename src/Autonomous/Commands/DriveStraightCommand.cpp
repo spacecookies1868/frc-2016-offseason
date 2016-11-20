@@ -21,25 +21,37 @@ DriveStraightCommand::DriveStraightCommand(RobotModel* myRobot, double myDesired
 }
 
 void DriveStraightCommand::Init() {
-	// Get PFac, IFac, DFac from INI file
+	// Get PID values from INI file
+	PIDConfig *disPIDConfig = new PIDConfig();
+	// TODO: make this more lightweight somehow
+	disPIDConfig->pFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disPFac", 0.6);		// not reading from ini :(. Will fix soon.
+	disPIDConfig->iFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disIFac", 0.015);
+	disPIDConfig->dFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disDFac", 2.5);
+	disPIDConfig->desiredAccuracy = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disDesiredAccuracy", 0.3);
+	disPIDConfig->maxAbsOutput = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disMaxAbsOutput", 0.9);
+	disPIDConfig->maxAbsError = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disMaxAbsError", 4.0);
+	disPIDConfig->maxAbsDiffError = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disMaxAbsDiffError", 3.0);
+	disPIDConfig->maxAbsITerm = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disMaxAbsITerm", 0.4);
+	disPIDConfig->timeLimit = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disTimeLimit", 1.0);
 
-	double disPFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disPFac", 0.6);
-	double disIFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disIFac", 0.015);
-	double disDFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disDFac", 2.5);
-
-	double rPFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rPFac", 0.02);
-	double rIFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rIFac", 0.0);
-	double rDFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rDFac", 0.1);
+	PIDConfig *rPIDConfig = new PIDConfig();
+	rPIDConfig->pFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rPFac", 0.02);
+	rPIDConfig->iFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rIFac", 0.0);
+	rPIDConfig->dFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rDFac", 0.1);
+	rPIDConfig->desiredAccuracy = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rDesiredAccuracy", 0.0);
+	rPIDConfig->maxAbsOutput = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rMaxAbsOutput", 0.4);
+	rPIDConfig->maxAbsError = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rMaxAbsError", 0.0);
+	rPIDConfig->maxAbsDiffError = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rMaxAbsDiffError", 0.0);
+	rPIDConfig->maxAbsITerm = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rMaxAbsITerm", 0.0);
+	rPIDConfig->timeLimit = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rTimeLimit", 0.0);
 
 	initialDis = (robot->GetLeftDriveEncoderValue() + robot->GetRightDriveEncoderValue()) / 2.0;
 	initialR = GetAccumulatedYaw();
 	desiredR = 0.0;
-	disPID = new PIDControlLoop(disPFac, disIFac, disDFac);
-	rPID = new PIDControlLoop(rPFac, rIFac, rDFac);
+	disPID = new PIDControlLoop(disPIDConfig);
+	rPID = new PIDControlLoop(rPIDConfig);
 	disPID->Init(initialDis, initialDis + desiredDis);
 	rPID->Init(initialR, initialR + desiredR);
-	printf("IN INIT");
-	SmartDashboard::PutNumber("drivestraightcommand", 0);
 }
 
 double DriveStraightCommand::GetAccumulatedYaw() {
@@ -63,7 +75,7 @@ double DriveStraightCommand::GetAccumulatedYaw() {
 
 void DriveStraightCommand::Update(double currTimeSec, double deltaTimeSec) {
 	double currDis = (robot->GetLeftDriveEncoderValue() + robot->GetRightDriveEncoderValue()) / 2.0;
-	bool disPIDDone = disPID->ControlLoopDone(currDis,deltaTimeSec);
+	bool disPIDDone = disPID->ControlLoopDone(currDis);
 
 	if (disPIDDone) {
 		isDone = true;
@@ -73,8 +85,8 @@ void DriveStraightCommand::Update(double currTimeSec, double deltaTimeSec) {
 	} else {
 		double disOutput = disPID->Update(currDis);
 		double rOutput = rPID->Update(GetAccumulatedYaw());
-		disPID->PrintPID("disPID");
-		rPID->PrintPID("rPID");
+		disPID->PrintPIDValues("disPID");
+		rPID->PrintPIDValues("rPID");
 
 		SmartDashboard::PutNumber("Current distance", currDis);
 		SmartDashboard::PutNumber("Current yaw", GetAccumulatedYaw());

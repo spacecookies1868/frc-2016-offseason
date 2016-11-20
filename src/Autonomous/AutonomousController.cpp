@@ -6,6 +6,7 @@ AutonomousController::AutonomousController(){
 
 AutonomousController::AutonomousController(AutonomousMode *autoMode){
 	autonomousMode = autoMode;
+
 }
 
 void AutonomousController::SetAutonomousMode(AutonomousMode *autoMode) {

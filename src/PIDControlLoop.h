@@ -1,7 +1,9 @@
 #ifndef SRC_PIDCONTROLLOOP_H_
 #define SRC_PIDCONTROLLOOP_H_
 
+#include "WPILib.h"
 #include <math.h>
+#include <string.h>
 
 class PIDControlLoop {
 public:
@@ -31,6 +33,8 @@ public:
 	double GetPFac();
 	double GetIFac();
 	double GetDFac();
+
+	void PrintPID(const std::string& pidName);
 
 private:
 	// PID variables

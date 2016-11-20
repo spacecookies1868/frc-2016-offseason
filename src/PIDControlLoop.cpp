@@ -4,13 +4,19 @@ PIDControlLoop::PIDControlLoop() {
 	pFac = 0.0;
 	iFac = 0.0;
 	dFac = 0.0;
-	maxAbsOutput = 0.0;
-	maxAbsError = 0.0;
-	maxAbsDiffError = 0.0;
-	desiredAccuracy = 0.0;
-	maxAbsITerm = 0.1;
-	minAbsError = 0.0;
-	timeLimit = 1.5;
+//	maxAbsOutput = 0.0;
+//	maxAbsError = 0.0;
+//	maxAbsDiffError = 0.0;
+//	desiredAccuracy = 0.0;
+//	maxAbsITerm = 0.1;
+//	minAbsError = 0.0;
+//	timeLimit = 1.5;
+	desiredAccuracy = 0.3;
+	maxAbsOutput = 1.0;
+	maxAbsError = 4.0;
+	maxAbsDiffError = 3.0;
+	maxAbsITerm = 0.4;
+	timeLimit = 2.0;
 	Init(0.0, 0.0);
 }
 
@@ -18,13 +24,19 @@ PIDControlLoop::PIDControlLoop(double p, double i, double d) {
 	pFac = p;
 	iFac = i;
 	dFac = d;
-	maxAbsOutput = 0.0;
-	maxAbsError = 0.0;
-	maxAbsDiffError = 0.0;
-	desiredAccuracy = 0.0;
-	maxAbsITerm = 0.1;
-	minAbsError = 0.0;
-	timeLimit = 1.5;
+//	maxAbsOutput = 0.0;
+//	maxAbsError = 0.0;
+//	maxAbsDiffError = 0.0;
+//	desiredAccuracy = 0.0;
+//	maxAbsITerm = 0.1;
+//	minAbsError = 0.0;
+//	timeLimit = 1.5;
+	desiredAccuracy = 0.3;
+	maxAbsOutput = 1.0;
+	maxAbsError = 4.0;
+	maxAbsDiffError = 3.0;
+	maxAbsITerm = 0.4;
+	timeLimit = 2.0;
 	Init(0.0, 0.0);
 }
 
@@ -42,7 +54,7 @@ void PIDControlLoop::Init(double p, double i, double d, double myInitialValue, d
 }
 
 double PIDControlLoop::Update(double currentValue) {
-	double error = desiredValue - currentValue;
+	error = desiredValue - currentValue;
 	error = Saturate(error, maxAbsError);
 	double diffError = 0.0;
 
@@ -57,9 +69,9 @@ double PIDControlLoop::Update(double currentValue) {
 		sumError = Saturate(sumError, (maxAbsITerm / iFac));
 	}
 
-	double pTerm = pFac * error;
-	double iTerm = iFac * sumError;
-	double dTerm = dFac * diffError;
+	pTerm = pFac * error;
+	iTerm = iFac * sumError;
+	dTerm = dFac * diffError;
 	double output = pTerm + iTerm + dTerm;
 	output = Saturate(output, maxAbsOutput);
 
@@ -72,10 +84,10 @@ double PIDControlLoop::Update(double currentValue) {
 }
 
 double PIDControlLoop::Update(double currentSensorValue, double desiredSensorValue) {
-	double error = desiredSensorValue - currentSensorValue;
+	error = desiredSensorValue - currentSensorValue;
 	desiredValue = desiredSensorValue;
 	error = Saturate(error, maxAbsError);
-	double diffError = 0.0;
+	diffError = 0.0;
 
 	if (oldError != 0.0) {
 		diffError = error - oldError;
@@ -87,9 +99,9 @@ double PIDControlLoop::Update(double currentSensorValue, double desiredSensorVal
 		sumError = Saturate(sumError, (maxAbsITerm / iFac));
 	}
 
-	double pTerm = pFac * error;
-	double iTerm = iFac * sumError;
-	double dTerm = dFac * diffError;
+	pTerm = pFac * error;
+	iTerm = iFac * sumError;
+	dTerm = dFac * diffError;
 	double output = pTerm + iTerm + dTerm;
 	output = Saturate(output, maxAbsOutput);
 
@@ -151,4 +163,13 @@ double PIDControlLoop::Saturate(double value, double maxAbsValue) {
 	} else {
 		return value;
 	}
+}
+
+void PIDControlLoop::PrintPID(const std::string& pidName) {
+	SmartDashboard::PutNumber(pidName + " pTerm", pTerm);
+	SmartDashboard::PutNumber(pidName + " iTerm", iTerm);
+	SmartDashboard::PutNumber(pidName + " dTerm", dTerm);
+	SmartDashboard::PutNumber(pidName + " error", error);
+	SmartDashboard::PutNumber(pidName + " sumError", sumError);
+	SmartDashboard::PutNumber(pidName + " diffError", diffError);
 }

@@ -30,7 +30,6 @@ public:
 		controlBoard = new ControlBoard();
 		driveController = new DriveController(robot, controlBoard);
 		superstructureController = new SuperstructureController();
-		autonomousController = new AutonomousController();
 		cameraController = new CameraController();
 		liveWindow = LiveWindow::GetInstance();
 
@@ -50,6 +49,7 @@ private:
 
 		// Starts autonomous
 		// autonomousController->StartAutonomous();
+		autonomousController = new AutonomousController();
 		ReachMode *reachMode = new ReachMode(robot);
 		autonomousController->SetAutonomousMode(reachMode);
 		Wait(0.5);

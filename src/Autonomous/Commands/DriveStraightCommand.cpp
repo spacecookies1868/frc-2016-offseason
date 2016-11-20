@@ -22,13 +22,14 @@ DriveStraightCommand::DriveStraightCommand(RobotModel* myRobot, double myDesired
 
 void DriveStraightCommand::Init() {
 	// Get PFac, IFac, DFac from INI file
-	double disPFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disPFac", 0.0);
-	double disIFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disIFac", 0.0);
-	double disDFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disDFac", 0.0);
 
-	double rPFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rPFac", 0.0);
+	double disPFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disPFac", 0.6);
+	double disIFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disIFac", 0.015);
+	double disDFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "disDFac", 2.5);
+
+	double rPFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rPFac", 0.02);
 	double rIFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rIFac", 0.0);
-	double rDFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rDFac", 0.0);
+	double rDFac = robot->pini->getf("DRIVESTRAIGHTCOMMAND", "rDFac", 0.1);
 
 	initialDis = (robot->GetLeftDriveEncoderValue() + robot->GetRightDriveEncoderValue()) / 2.0;
 	initialR = GetAccumulatedYaw();
@@ -37,6 +38,8 @@ void DriveStraightCommand::Init() {
 	rPID = new PIDControlLoop(rPFac, rIFac, rDFac);
 	disPID->Init(initialDis, initialDis + desiredDis);
 	rPID->Init(initialR, initialR + desiredR);
+	printf("IN INIT");
+	SmartDashboard::PutNumber("drivestraightcommand", 0);
 }
 
 double DriveStraightCommand::GetAccumulatedYaw() {
@@ -65,16 +68,23 @@ void DriveStraightCommand::Update(double currTimeSec, double deltaTimeSec) {
 	if (disPIDDone) {
 		isDone = true;
 		robot->SetWheelSpeed(RobotModel::kAllWheels, 0.0);
-		printf("End distance: %f", currDis);
-		printf("End yaw: %f", GetAccumulatedYaw());
+		printf("End distance: %f\n", currDis);
+		printf("End yaw: %f\n", GetAccumulatedYaw());
 	} else {
 		double disOutput = disPID->Update(currDis);
 		double rOutput = rPID->Update(GetAccumulatedYaw());
+		disPID->PrintPID("disPID");
+		rPID->PrintPID("rPID");
 
 		SmartDashboard::PutNumber("Current distance", currDis);
 		SmartDashboard::PutNumber("Current yaw", GetAccumulatedYaw());
 		SmartDashboard::PutNumber("Distance output", disOutput);
 		SmartDashboard::PutNumber("Angle output", rOutput);
+		SmartDashboard::PutNumber("Distance error", disPID->GetError());
+		SmartDashboard::PutNumber("Angle error", rPID->GetError());
+
+		printf("Distance error: %f\n", disPID->GetError());
+		printf("Angle error: %f\n", rPID->GetError());
 
 		double leftOutput = disOutput + rOutput;
 		double rightOutput = disOutput - rOutput;
@@ -96,5 +106,4 @@ void DriveStraightCommand::Update(double currTimeSec, double deltaTimeSec) {
 
 bool DriveStraightCommand::IsDone() {
 	return isDone;
-
 }

@@ -49,7 +49,7 @@ double PIDControlLoop::Update(double myCurrentSensorValue) {
 	pTerm = pidConfig->pFac * error;
 	iTerm = pidConfig->iFac * sumError;
 	dTerm = pidConfig->dFac * diffError;
-	output = pTerm + iTerm + dTerm; //  PID
+	output = pTerm + iTerm + dTerm;
 	output = Saturate(output, pidConfig->maxAbsOutput);
 	oldError = error;
 	return output;
@@ -66,13 +66,12 @@ double PIDControlLoop::Update(double currValue, double desiredValue) {
 	}
 	sumError += error;
 	if (pidConfig->iFac > 0.0) {
-		sumError = Saturate(sumError,
-				(pidConfig->maxAbsITerm / pidConfig->iFac));
+		sumError = Saturate(sumError, (pidConfig->maxAbsITerm / pidConfig->iFac));
 	}
 	pTerm = pidConfig->pFac * error;
 	iTerm = pidConfig->iFac * sumError;
 	dTerm = pidConfig->dFac * diffError;
-	output = pTerm + iTerm + dTerm; //  PID
+	output = pTerm + iTerm + dTerm;
 	output = Saturate(output, pidConfig->maxAbsOutput);
 	if (fabs(output) < pidConfig->minAbsError) {
 		output = 0.0;
@@ -87,6 +86,7 @@ double PIDControlLoop::Update(PIDConfig* myConfig, double currValue, double desi
 }
 
 // Limits value to maxAbsValue
+// If maxAbsValue is 0, then just return the value (no limit)
 double PIDControlLoop::Saturate(double value, double maxAbsValue) {
 	if (maxAbsValue > 0.0) {
 		if (value > 0.0) {
